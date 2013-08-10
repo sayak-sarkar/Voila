@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<link rel="stylesheet" type="text/css" href="stylesheets/voila.css">
+		<script src="scripts/voila.js"></script>
+		<title>Voila!</title>
+	</head>
+
+	<body>
+		<div id="manifestGenerator" class="unhidden">
+			<div class="caption">Voila! - Manifest Generator</div>
+			<hr/>
+			<form name="manifestForm" action="#" onsubmit="validateForm(); return false">
+				<div id="appDetails">
+					App Name: <br><input type="text" name="name"><br>
+					App Description: <br><textarea cols="27" rows="8" name="description"></textarea><br>
+				</div>
+				<div id="developerDetails">
+					Developer's Name: <br><input type="text" name="name"><br>
+					Developer's URL: <br><input type="text" name="url"><br>
+				</div>
+				<hr/>
+				<div id="footer">
+					<input class="submit" type="submit" value="Submit and Continue....">
+				</div>
+			</form>
+			<br/>
+		</div>
+
+		<div id="editor" class="hidden">
+			<div class="caption">Voila! - Source Editor</div>
+			<hr/>
+			<div id="header">
+				<a href="javascript:unhide('htmlInput');">
+					<div style="float: left; width: 33%;"> HTML </div>
+				</a>
+				<a href="javascript:unhide('cssInput');">
+					<div style="float: left; width: 33%;"> CSS </div>
+				</a>
+				<a href="javascript:unhide('jsInput');">
+					<div style="float: left; width: 33%;"> JS </div>
+				</a>
+			</div>
+			<hr/>
+			<form name="editorForm" action="#" onsubmit="submitCode(); return false">
+				<div id="wrapper">
+					<div>
+						<textarea class="unhidden" cols="42" id="htmlInput" rows="20" name="htmlEditor"></textarea>
+					</div>
+					<div>
+						<textarea class="hidden" cols="42" id="cssInput" rows="20" name="cssEditor"></textarea>
+					</div>
+					<div>
+						<textarea class="hidden" cols="42" id="jsInput" rows="20" name="jsEditor"></textarea>
+					</div>
+				</div>	
+				<hr/>
+				<div id="footer">
+					<input class="submit" type="submit" value="Submit">
+				</div>
+			</form>
+			<br/>
+		</div>
+	</body>
+</html>

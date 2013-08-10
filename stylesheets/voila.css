@@ -1,0 +1,64 @@
+a {
+	color: #ffffff;
+	text-decoration: none;
+}
+body {
+	background-color: #c13832;
+	color: #ffffff;
+	font-family: Verdana, Georgia, Helvetica,/* Desktop */ "MozTT", "Droid Sans", "Helvetica Neue",/* Mobile */ Sans-serif;/* Fallback*/
+	line-height: 175%;
+	text-align: center;
+}
+hr {
+	margin-top: 11px;
+}
+
+.caption {
+	font-size: 24px;
+	padding-top: 5px; 
+}
+
+.submit {
+	background: #ff9900 repeat scroll 0 0 ;
+	background: -moz-linear-gradient(center top , #84c63c 0pt, #57a21f 100%);
+	border: 1px solid #559a1c;
+	border-radius: 5px 5px 5px 5px;
+	color: #ffffff;
+	display: inline;
+	font-size: 15px;
+	font-weight: bold;
+	height: 41px;
+	margin: 0;
+	padding: 10px;
+	text-align: center;
+	text-shadow: 0 1px 0 #333333;
+	font-family: Verdana, Georgia, Helvetica,				/* Desktop */
+				 "MozTT", "Droid Sans", "Helvetica Neue",	/* Mobile */
+				 Sans-serif;								/* Fallback*/
+}
+/*editor.html*/
+/*Classes*/
+.hidden { 
+	visibility: hidden; 
+	display: none;
+}
+.unhidden {
+	visibility: visible; 
+	display: block;
+}
+
+/*IDs*/
+#footer{
+	height: 20px; 
+	padding-bottom: 1px; 
+	padding-top: 10px; 
+	text-align: center;
+}
+#header{
+	height: 20px; 
+	padding-bottom: 1px;  
+	text-align: center;
+}
+#wrapper{
+	text-align: center;
+}
