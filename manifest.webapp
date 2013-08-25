@@ -13,5 +13,9 @@
   "developer" : {
     "name": "Sayak Sarkar",
     "url": "http://sayak.in"
-  }
+  },
+  "permissions": {
+    "device-storage:sdcard":{ "access": "readwrite"}
+  },
+  "type": "privileged"
 }

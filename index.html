@@ -49,13 +49,42 @@
 			<form name="editorForm" action="#" onsubmit="submitCode(); return false">
 				<div id="wrapper">
 					<div>
-						<textarea class="unhidden" cols="42" id="htmlInput" rows="20" name="htmlEditor"></textarea>
+						<textarea class="unhidden" cols="42" id="htmlInput" rows="20" name="htmlEditor">
+<!--Sample HTML Source below-->
+<html>
+<head>
+<meta charset="utf-8">
+<title><!-- App Title --></title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  
+<!--Do not change the css/js source-paths-->
+<link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
+</head>
+
+<body>
+<!-- App Content -->
+</body>
+</html></textarea>
 					</div>
 					<div>
-						<textarea class="hidden" cols="42" id="cssInput" rows="20" name="cssEditor"></textarea>
+						<textarea class="hidden" cols="42" id="cssInput" rows="20" name="cssEditor">
+/*
+To use external CSS, make sure that you include the following line within your HTML:-
+
+<link rel="stylesheet" type="text/css" href="style.css">
+*/
+						</textarea>
 					</div>
 					<div>
-						<textarea class="hidden" cols="42" id="jsInput" rows="20" name="jsEditor"></textarea>
+						<textarea class="hidden" cols="42" id="jsInput" rows="20" name="jsEditor">
+/*
+To use external JS, make sure that you include the following line within your HTML:-
+
+<script src="script.js"></script>
+*/
+						</textarea>
 					</div>
 				</div>	
 				<hr/>
