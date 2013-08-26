@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 		<link rel="stylesheet" type="text/css" href="stylesheets/voila.css">
 		<script src="scripts/voila.js"></script>
+		<script src="scripts/jszip.js"></script>
 		<title>Voila!</title>
 	</head>
 
@@ -36,20 +37,20 @@
 			<hr/>
 			<div id="header">
 				<a href="javascript:unhide('htmlInput');">
-					<div style="float: left; width: 33%;"> HTML </div>
+					<div id="htmlLabel" style="background: -moz-linear-gradient(center top , #84c63c 0pt, #57a21f 100%); float: left; width: 33%;"> HTML </div>
 				</a>
 				<a href="javascript:unhide('cssInput');">
-					<div style="float: left; width: 33%;"> CSS </div>
+					<div id="cssLabel" style="float: left; width: 33%;"> CSS </div>
 				</a>
 				<a href="javascript:unhide('jsInput');">
-					<div style="float: left; width: 33%;"> JS </div>
+					<div id="jsLabel" style="float: left; width: 33%;"> JS </div>
 				</a>
 			</div>
 			<hr/>
 			<form name="editorForm" action="#" onsubmit="submitCode(); return false">
 				<div id="wrapper">
 					<div>
-						<textarea class="unhidden" cols="42" id="htmlInput" rows="20" name="htmlEditor">
+						<textarea class="unhidden" cols="42" id="htmlInput" rows="21" name="htmlEditor">
 <!--Sample HTML Source below-->
 <html>
 <head>
@@ -69,7 +70,7 @@
 </html></textarea>
 					</div>
 					<div>
-						<textarea class="hidden" cols="42" id="cssInput" rows="20" name="cssEditor">
+						<textarea class="hidden" cols="42" id="cssInput" rows="21" name="cssEditor">
 /*
 To use external CSS, make sure that you include the following line within your HTML:-
 
@@ -78,7 +79,7 @@ To use external CSS, make sure that you include the following line within your H
 						</textarea>
 					</div>
 					<div>
-						<textarea class="hidden" cols="42" id="jsInput" rows="20" name="jsEditor">
+						<textarea class="hidden" cols="42" id="jsInput" rows="21" name="jsEditor">
 /*
 To use external JS, make sure that you include the following line within your HTML:-
 

@@ -40,6 +40,23 @@ function unhide(editorId) {
 	if (item) {
 		item.className='unhidden';
 	}
+
+	if (editorId=='htmlInput') {
+		document.getElementById('htmlLabel').style.background='-moz-linear-gradient(center top , #84c63c 0pt, #57a21f 100%)';
+		document.getElementById('cssLabel').style.background='#c13832';
+		document.getElementById('jsLabel').style.background='#c13832';
+	} 
+	else if (editorId=='cssInput') {
+		document.getElementById('cssLabel').style.background='-moz-linear-gradient(center top , #84c63c 0pt, #57a21f 100%)';
+		document.getElementById('htmlLabel').style.background='#c13832';
+		document.getElementById('jsLabel').style.background='#c13832';
+	} 
+	else if (editorId=='jsInput') {
+		document.getElementById('jsLabel').style.background='-moz-linear-gradient(center top , #84c63c 0pt, #57a21f 100%)';
+		document.getElementById('htmlLabel').style.background='#c13832';
+		document.getElementById('cssLabel').style.background='#c13832';
+	} 
+
 }
 
 function submitCode () {
@@ -47,7 +64,19 @@ function submitCode () {
 	window.markup = document.forms['editorForm'].elements[0].value;
 	window.script = document.forms['editorForm'].elements[2].value;
 	//store();
-	fetch();
+	//fetch();
+	//install();
+	package();
+}
+
+function package() {
+    var zip = new JSZip();
+    zip.file("manifest.webapp", manifest);
+    zip.file("index.html", markup);
+    zip.file("style.css", style);
+    zip.file("script.js", script);
+    content = zip.generate();
+    location.href="data:application/zip;base64," + content;
 }
 
 function store () {
@@ -63,15 +92,28 @@ function store () {
 	var request = sdcard.addNamed(styledata, "voila/"+appname+"/style.css");
 	var request = sdcard.addNamed(scriptdata, "voila/"+appname+"/script.js");
 
-
 	request.onsuccess = function () {
 	  var name = this.result;
-	  console.log('File "' + name + '" successfully wrote on the sdcard storage area');
+	  console.log('Files successfully written on the sdcard storage area');
 	}
 
 	request.onerror = function () {
 	  console.warn('Unable to write the file: ' + this.error);
 	}
+}
+
+function install () {
+	var manifestUrl = "voila/app/manifest.webapp";
+	var request = window.navigator.mozApps.install(manifestUrl);
+	request.onsuccess = function () {
+	  // Save the App object that is returned
+	  var appRecord = this.result;
+	  alert('Installation successful!');
+	};
+	request.onerror = function () {
+	  // Display the error information from the DOMError object
+	  alert('Install failed, error: ' + this.error.name);
+	};
 }
 
 function fetch () {
@@ -93,6 +135,7 @@ function fetch () {
 
 	  console.log("File name: " + file.name);
 	  console.log("File type: " + file.type);
+	  console.log("File path: " + file.mozFullPath)
 
 	  if (!this.done) {
 	  	this.continue();
