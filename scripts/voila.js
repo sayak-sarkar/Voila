@@ -63,10 +63,13 @@ function submitCode () {
 	window.style = document.forms['editorForm'].elements[1].value;
 	window.markup = document.forms['editorForm'].elements[0].value;
 	window.script = document.forms['editorForm'].elements[2].value;
-	//store();
+	
+	/*Comment out or Uncomment any of the following function calls to either store or fetch data to/from the sdcard,
+	 or install to the device or optionally return the application package as a zipped file to the user*/
+	store();
 	//fetch();
 	//install();
-	package();
+	//package();
 }
 
 function package() {
@@ -104,7 +107,7 @@ function store () {
 
 function install () {
 	var manifestUrl = "voila/app/manifest.webapp";
-	var request = window.navigator.mozApps.install(manifestUrl);
+	var request = window.navigator.mozApps.installPackage(manifestUrl);
 	request.onsuccess = function () {
 	  // Save the App object that is returned
 	  var appRecord = this.result;
