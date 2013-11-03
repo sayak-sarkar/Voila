@@ -6,13 +6,39 @@
 		<meta name="apple-mobile-web-app-capable" content="yes"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 		<link rel="stylesheet" type="text/css" href="stylesheets/voila.css">
+		<script src="scripts/jquery-1.10.2.min.js"></script>
 		<script src="scripts/voila.js"></script>
 		<script src="scripts/jszip.js"></script>
 		<title>Voila!</title>
 	</head>
 
+
 	<body>
-		<div id="manifestGenerator" class="unhidden">
+
+		<div id="appTypeSelector" class="unhidden">
+			<div class="caption"><h1>Voila!</h1></div>
+			<hr/>
+			<br/>
+			<div id="selectorOptions">
+				<br/><br/>
+				<div id="addApp">
+					<input class="submit" onclick="createNew()" type="submit" value="Create New Application">
+				</div>
+				<br/>
+				<div id="editApp">
+					<input class="submit" onclick="viewExisting()" type="submit" value="View Existing Applications">
+				</div>
+				<br/>
+			</div>
+			<br/>
+			<hr/>
+			<div id="footer">
+			</div>
+			<br/>
+		</div>
+
+
+		<div id="manifestGenerator" class="hidden">
 			<div class="caption">Voila! - Manifest Generator</div>
 			<hr/>
 			<form name="manifestForm" action="#" onsubmit="validateForm(); return false">
@@ -26,11 +52,13 @@
 				</div>
 				<hr/>
 				<div id="footer">
-					<input class="submit" type="submit" value="Submit and Continue....">
+					<input class="submit" type="button" value="< Back" onclick="goHomeFromManifest()">
+					<input class="submit" type="submit" value="Next >">
 				</div>
 			</form>
 			<br/>
 		</div>
+
 
 		<div id="editor" class="hidden">
 			<div class="caption">Voila! - Source Editor</div>
@@ -67,7 +95,8 @@
 <body>
 <!-- App Content -->
 </body>
-</html></textarea>
+</html>
+						</textarea>
 					</div>
 					<div>
 						<textarea class="hidden" cols="42" id="cssInput" rows="21" name="cssEditor">
@@ -90,10 +119,30 @@ To use external JS, make sure that you include the following line within your HT
 				</div>	
 				<hr/>
 				<div id="footer">
+					<input class="submit" type="button" value="< Back" onclick="goBackFromEditor()">
 					<input class="submit" type="submit" value="Submit">
 				</div>
 			</form>
 			<br/>
+		</div>
+
+
+		<div id="appList" class="hidden">
+			<div class="caption">Voila! - App Selector</div>
+			<hr/>
+			
+			<div id="listContainer" data-role="content">
+				<div id="listItem">
+				</div>
+			</div>
+			
+
+			<div id="footer">
+				<div id="editApp">
+					<input class="submit" type="button" value="< Back" onclick="goHomeFromAppList()">
+					<input class="submit" onclick="deleteAll()" type="submit" value="Delete all Apps!">
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -1,8 +1,110 @@
+// variable which will hold the database connection
+var db;
+
 //index.html
-function validateForm()
-{
+function createNew(){
+	document.getElementById("appTypeSelector").className='hidden';
+	document.getElementById("manifestGenerator").className='unhidden';
+}
+
+function viewExisting() {
+	document.getElementById("appTypeSelector").className='hidden';
+	document.getElementById("appList").className='unhidden';
+
+	//Empty the list first
+		$("#listContainer").html("");
+	  	//Read the Apps
+     	var transaction = db.transaction([ 'Apps' ]);
+	  	var store = transaction.objectStore('Apps');
+	
+  	  	// open a cursor to retrieve all items from the 'Apps' store
+	  	store.openCursor().onsuccess = function (e) {
+			var cursor = e.target.result;
+		 	if (cursor) {
+			    var value = cursor.value;
+		 		var AppElement = $("<div/>");
+				var h3AppName = $("<h3/>").text(value.appname);
+				var pAppDescription = $("<p/>").text(value.appdesc);
+				var pDevName = $("<p/>").text(value.devname);
+				var pDevURL =  $("<p/>").text(value.devurl);
+				var dmanifest = $("<div/>").text(value.manifestdata);
+				var deletebutton = "<input class='submit' onclick='deleteApp("+value.id+")' type='submit' value='Delete'>";
+				var editbutton = "<input class='submit' onclick='editApp()' type='submit' value='Edit'>";
+				AppElement.append(value.id);
+				AppElement.append(h3AppName);
+				AppElement.append(pAppDescription);
+				AppElement.append(pDevName);
+				AppElement.append(pDevURL);
+				AppElement.append(dmanifest);
+				$("#listContainer").append(AppElement);
+				$("#listContainer").append(editbutton);
+				$("#listContainer").append(deletebutton);
+				$("#listContainer").append("<hr/>");
+
+				function editApp () {
+					document.getElementById("appList").className='hidden';
+					
+					document.getElementById("manifestGenerator").className='unhidden';
+				}
+
+			    // move to the next item in the cursor
+				cursor.continue();
+		  	}
+		};
+}
+
+function deleteApp (appid) {
+	var transaction = db.transaction([ 'Apps' ], 'readwrite');
+	var store = transaction.objectStore('Apps');
+	
+	var request = store.delete(appid);
+	request.onsuccess = function () {
+		alert("App deleted!");
+		viewExisting();
+	}
+	request.onerror = function (e) {
+		alert("Error while deleting App : " + e.value);
+	};
+}
+
+function deleteAll() {
+	var transaction = db.transaction([ 'Apps' ], 'readwrite');
+	var store = transaction.objectStore('Apps');
+	   
+	//Delete all the Apps
+	//Alternately if you know the ID, you can use store.delete(ID) for individual item deletion
+	var request = store.clear();
+	request.onsuccess = function () {
+		$("#listContainer").html("");
+		alert("All Apps have been deleted!");
+	}
+	request.onerror = function (e) {
+		alert("Error while deleting Apps : " + e.value);
+	};
+}
+
+function goHomeFromManifest () {
+	document.getElementById("manifestGenerator").className='hidden';
+	document.getElementById("appTypeSelector").className='unhidden';
+}
+
+function goHomeFromAppList () {
+	document.getElementById("appList").className='hidden';
+	document.getElementById("appTypeSelector").className='unhidden';
+}
+
+function goBackFromEditor () {
+	document.getElementById("editor").className='hidden';
+	document.getElementById("manifestGenerator").className='unhidden';
+}
+
+function validateForm() {
+
 	window.manifest = '{';
 	window.appname = document.forms['manifestForm'].elements[0].value;
+	window.appdesc = document.forms['manifestForm'].elements[1].value;
+	window.devname = document.forms['manifestForm'].elements[2].value;
+	window.devurl = document.forms['manifestForm'].elements[3].value;
 
 	for (i=0;i<4;i++) {
 		var box = document.forms['manifestForm'].elements[i];
@@ -28,6 +130,7 @@ function validateForm()
 	document.getElementById('manifestGenerator').className='hidden';
 	document.getElementById('editor').className='unhidden';
 }
+
 
 //editor.html
 function unhide(editorId) {			
@@ -56,7 +159,6 @@ function unhide(editorId) {
 		document.getElementById('htmlLabel').style.background='#c13832';
 		document.getElementById('cssLabel').style.background='#c13832';
 	} 
-
 }
 
 function submitCode () {
@@ -83,6 +185,42 @@ function package() {
 }
 
 function store () {
+
+	//IndexedDB Storage
+	console.log(db);
+	//Initialize the Database first
+    //initializeDB();
+
+    console.log(db);
+
+	// create the transaction with 1st parameter is the list of stores and the second specifies
+	// a flag for the readwrite option
+	var transaction = db.transaction([ 'Apps' ], 'readwrite');
+	
+	//Create the Object to be saved i.e. our App
+	var value = {};
+	value.appname = window.appname;
+	value.appdesc = window.appdesc;
+	value.devname = window.devname;
+	value.devurl = window.devurl;
+
+	value.manifestdata = window.manifest;
+	
+	value.markupdata = window.markup;
+	value.scriptdata = window.script;
+	value.styledata = window.style;
+
+	// add the App to the store
+	var store = transaction.objectStore('Apps');
+	var request = store.add(value);
+	request.onsuccess = function (e) {
+		alert("Your App has been saved");
+	};
+	request.onerror = function (e) {
+	   	alert("Error in saving the App. Reason : " + e.value);
+	}
+
+	//SD card Storage
 	var sdcard = navigator.getDeviceStorage("sdcard");
 
 	var manifestdata = new Blob([window.manifest], {type: "text/plain"});
@@ -98,6 +236,7 @@ function store () {
 	request.onsuccess = function () {
 	  var name = this.result;
 	  console.log('Files successfully written on the sdcard storage area');
+	  package();
 	}
 
 	request.onerror = function () {
@@ -163,3 +302,51 @@ function remove () {
 	  console.log("Unable to delete the file: " + this.error);
 	}
 }
+
+$(document).ready(function(){
+
+	if (window.indexedDB) {
+		console.log("IndexedDB support is there");
+	}
+	else {
+		alert("Indexed DB is not supported. Where are you trying to run this ? ");
+	}
+ 
+	// open the database
+	// 1st parameter : Database name. We are using the name 'Appsdb'
+	// 2nd parameter is the version of the database.
+	var request = indexedDB.open('Appsdb', 1);
+	
+	request.onsuccess = function (e) {
+		// e.target.result has the connection to the database
+	  	db = e.target.result;
+
+	  	//console.log(db);
+	  	console.log("DB Opened!");
+	  	//Alternately, if you want - you can retrieve all the items
+	}
+	 
+	request.onerror = function (e) {
+	   	console.log(e);
+	};
+	 
+	// this will fire when the version of the database changes
+	// We can only create Object stores in a versionchange transaction.
+	request.onupgradeneeded = function (e) {
+	   	// e.target.result holds the connection to database
+	   	db = e.target.result;
+	   
+	   	if (db.objectStoreNames.contains("Apps")) {
+	    	db.deleteObjectStore("Apps");
+	   	}
+		
+	   	// create a store named 'Apps'
+	   	// 1st parameter is the store name
+	   	// 2nd parameter is the key field that we can specify here. Here we have opted for autoIncrement but it could be your
+	   	// own provided value also.
+	   	var objectStore = db.createObjectStore('Apps', { keyPath: 'id', autoIncrement: true });
+	   
+	   	console.log("Object Store has been created");
+	};
+
+});
