@@ -24,17 +24,17 @@ function viewExisting() {
 			    var value = cursor.value;
 		 		var AppElement = $("<div/>");
 				var h3AppName = $("<h3/>").text(value.appname);
-				var pAppDescription = $("<p/>").text(value.appdesc);
-				var pDevName = $("<p/>").text(value.devname);
-				var pDevURL =  $("<p/>").text(value.devurl);
+				var h4AppDescription = $("<h4/>").text(value.appdesc);
+				var pDevName = $("<p/>").text("Developer: "+value.devname);
+				var h5DevURL =  $("<h5/>").text(value.devurl);
 				var dmanifest = $("<div/>").text(value.manifestdata);
 				var deletebutton = "<input class='submit' onclick='deleteApp("+value.id+")' type='submit' value='Delete'>";
 				var editbutton = "<input class='submit' onclick='editApp("+value.id+")' type='submit' value='Edit'>";
 				//AppElement.append(value.id);
 				AppElement.append(h3AppName);
-				AppElement.append(pAppDescription);
+				AppElement.append(h4AppDescription);
 				AppElement.append(pDevName);
-				AppElement.append(pDevURL);
+				AppElement.append(h5DevURL);
 				//AppElement.append(dmanifest);
 				$("#listContainer").append(AppElement);
 				$("#listContainer").append(editbutton);
@@ -221,7 +221,7 @@ function submitCode () {
 		
 		var request = objStore.delete(window.appid);
 		request.onsuccess = function () {
-			alert("App Updated!");
+			//alert("App Updated!");
 			viewExisting();
 		}
 		request.onerror = function (e) {
@@ -270,9 +270,7 @@ function store () {
 	var store = transaction.objectStore('Apps');
 	var request = store.add(value);
 	request.onsuccess = function (e) {
-		if (window.editFlag!=1) {
-			alert("Your App has been saved!");
-		}
+		alert("Your App has been saved!");
 	};
 	request.onerror = function (e) {
 	   	alert("Error in saving the App. Reason : " + e.value);

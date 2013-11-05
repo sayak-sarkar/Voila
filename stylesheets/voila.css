@@ -2,6 +2,7 @@ a {
 	color: #ffffff;
 	text-decoration: none;
 }
+
 body {
 	background-color: #c13832;
 	color: #ffffff;
@@ -10,6 +11,28 @@ body {
 	text-align: center;
 	text-shadow: 0 2px 0 #333333;
 }
+
+h3	{
+	text-decoration: underline;
+	height: 10px;
+}
+
+h4	{
+	font-weight: normal;
+	height: 7px;
+}
+
+h5	{
+	margin-top: -2px;
+	font-weight: normal;
+	font-style: italic;
+	height: 5px;	
+}
+
+p 	{
+	height: 5px;
+}
+
 hr {
 	margin-top: 7px;
 }
@@ -37,6 +60,7 @@ hr {
 	font-family: Verdana, Georgia, Helvetica,				/* Desktop */
 				 "MozTT", "Droid Sans", "Helvetica Neue",	/* Mobile */
 				 Sans-serif;								/* Fallback*/
+	margin: 5px;
 }
 /*editor.html*/
 /*Classes*/
