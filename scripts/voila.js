@@ -29,28 +29,56 @@ function viewExisting() {
 				var pDevURL =  $("<p/>").text(value.devurl);
 				var dmanifest = $("<div/>").text(value.manifestdata);
 				var deletebutton = "<input class='submit' onclick='deleteApp("+value.id+")' type='submit' value='Delete'>";
-				var editbutton = "<input class='submit' onclick='editApp()' type='submit' value='Edit'>";
-				AppElement.append(value.id);
+				var editbutton = "<input class='submit' onclick='editApp("+value.id+")' type='submit' value='Edit'>";
+				//AppElement.append(value.id);
 				AppElement.append(h3AppName);
 				AppElement.append(pAppDescription);
 				AppElement.append(pDevName);
 				AppElement.append(pDevURL);
-				AppElement.append(dmanifest);
+				//AppElement.append(dmanifest);
 				$("#listContainer").append(AppElement);
 				$("#listContainer").append(editbutton);
 				$("#listContainer").append(deletebutton);
 				$("#listContainer").append("<hr/>");
 
-				function editApp () {
-					document.getElementById("appList").className='hidden';
-					
-					document.getElementById("manifestGenerator").className='unhidden';
-				}
-
 			    // move to the next item in the cursor
 				cursor.continue();
 		  	}
 		};
+}
+
+function editApp(appid) {
+	document.getElementById("appList").className='hidden';
+
+	var transaction = db.transaction([ 'Apps' ], 'readwrite');
+	var store = transaction.objectStore('Apps');
+
+	// open a cursor to retrieve all items from the 'Apps' store
+	store.openCursor().onsuccess = function (e) {
+		var cursor = e.target.result;
+	 	if (cursor) {
+	 		var value = cursor.value;
+
+	 		if (value.id == appid) {
+				document.getElementById("appname").value = value.appname;
+				document.getElementById("appdesc").value = value.appdesc;
+				document.getElementById("devname").value = value.devname;
+				document.getElementById("devurl").value = value.devurl;
+
+				document.getElementById("htmlInput").value = value.markupdata;
+				document.getElementById("jsInput").value = value.scriptdata;
+				document.getElementById("cssInput").value = value.styledata;
+
+				window.editFlag=1;
+				window.appid=appid;
+	 		}
+	 		else {
+	 			cursor.continue();
+	 		}
+	 	}
+	};
+
+	document.getElementById("manifestGenerator").className='unhidden';
 }
 
 function deleteApp (appid) {
@@ -172,6 +200,34 @@ function submitCode () {
 	//fetch();
 	//install();
 	//package();
+
+	//Reset the input forms.
+	document.getElementById("appname").value="";
+	document.getElementById("appdesc").value="";
+	document.getElementById("devname").value="";
+	document.getElementById("devurl").value="";
+	document.getElementById("htmlInput").value="<!--Sample HTML Source below-->\n<html>\n<head>\n<meta charset='utf-8'>\n<title><!-- App Title --></title>\n<meta name='viewport' content='width=device-width, initial-scale=1'>\n\n<!--Do not change the css/js source-paths-->\n<link rel='stylesheet' href='style.css'>\n<script src='script.js'></script>\n</head>\n\n<body>\n<!-- App Content -->\n</body>\n</html>";
+	document.getElementById("cssInput").value="/*\nTo use external CSS, make sure that you include the following line within your HTML:-\n\n<link rel='stylesheet' type='text/css' href='style.css'>\n*/";
+	document.getElementById("jsInput").value="/*\nTo use external JS, make sure that you include the following line within your HTML:-\n\n<script src='script.js'></script>\n*/";
+
+	//Reset to home screen.
+	document.getElementById("editor").className="hidden";
+	document.getElementById("appTypeSelector").className="unhidden";
+
+	//remove previous iteration of the app.
+	if (window.editFlag==1) {
+		var transaction = db.transaction([ 'Apps' ], 'readwrite');
+		var objStore = transaction.objectStore('Apps');
+		
+		var request = objStore.delete(window.appid);
+		request.onsuccess = function () {
+			alert("App Updated!");
+			viewExisting();
+		}
+		request.onerror = function (e) {
+			alert("Error while updating the App : " + e.value);
+		}
+	}
 }
 
 function package() {
@@ -214,7 +270,9 @@ function store () {
 	var store = transaction.objectStore('Apps');
 	var request = store.add(value);
 	request.onsuccess = function (e) {
-		alert("Your App has been saved");
+		if (window.editFlag!=1) {
+			alert("Your App has been saved!");
+		}
 	};
 	request.onerror = function (e) {
 	   	alert("Error in saving the App. Reason : " + e.value);
@@ -235,7 +293,7 @@ function store () {
 
 	request.onsuccess = function () {
 	  var name = this.result;
-	  console.log('Files successfully written on the sdcard storage area');
+	  console.log('Files successfully written on the sdcard storage area.');
 	  package();
 	}
 
