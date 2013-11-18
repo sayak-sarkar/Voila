@@ -230,6 +230,7 @@ function submitCode () {
 	}
 }
 
+//Package the app into a zip file.
 function package() {
     var zip = new JSZip();
     zip.file("manifest.webapp", manifest);
@@ -404,5 +405,4 @@ $(document).ready(function(){
 	   
 	   	console.log("Object Store has been created");
 	};
-
 });
