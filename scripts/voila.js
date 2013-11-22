@@ -2,11 +2,14 @@
 var db;
 
 //index.html
+
+//Open the App Creation Section.
 function createNew(){
 	document.getElementById("appTypeSelector").className='hidden';
 	document.getElementById("manifestGenerator").className='unhidden';
 }
 
+//Open the App List Section.
 function viewExisting() {
 	document.getElementById("appTypeSelector").className='hidden';
 	document.getElementById("appList").className='unhidden';
@@ -47,6 +50,7 @@ function viewExisting() {
 		};
 }
 
+//Functionilty to fetch an app from the IndexedDB and load it to the Development Form for modifications.
 function editApp(appid) {
 	document.getElementById("appList").className='hidden';
 
@@ -81,6 +85,7 @@ function editApp(appid) {
 	document.getElementById("manifestGenerator").className='unhidden';
 }
 
+//Delete an app from the IndexedDB.
 function deleteApp (appid) {
 	var transaction = db.transaction([ 'Apps' ], 'readwrite');
 	var store = transaction.objectStore('Apps');
@@ -95,6 +100,7 @@ function deleteApp (appid) {
 	};
 }
 
+//Clear the IndexedDB to delete all apps.
 function deleteAll() {
 	var transaction = db.transaction([ 'Apps' ], 'readwrite');
 	var store = transaction.objectStore('Apps');
@@ -111,21 +117,25 @@ function deleteAll() {
 	};
 }
 
+//Function to open the Home section using the Back Button within the Manifest Generator section.
 function goHomeFromManifest () {
 	document.getElementById("manifestGenerator").className='hidden';
 	document.getElementById("appTypeSelector").className='unhidden';
 }
 
+//Function to open the Home section using the Back Button within the App List section.
 function goHomeFromAppList () {
 	document.getElementById("appList").className='hidden';
 	document.getElementById("appTypeSelector").className='unhidden';
 }
 
+//Function to open the Home section using the Back Button within the App Development section.
 function goBackFromEditor () {
 	document.getElementById("editor").className='hidden';
 	document.getElementById("manifestGenerator").className='unhidden';
 }
 
+//Function to validate the user provided contents within the App Manifest section.
 function validateForm() {
 
 	window.manifest = '{';
@@ -160,7 +170,7 @@ function validateForm() {
 }
 
 
-//editor.html
+//Display the App Development section after the App Manifest Form has been filled up the user.
 function unhide(editorId) {			
 	var item = document.getElementById(editorId);
 	
@@ -189,6 +199,7 @@ function unhide(editorId) {
 	} 
 }
 
+//Fetch Data from the User filled forms.
 function submitCode () {
 	window.style = document.forms['editorForm'].elements[1].value;
 	window.markup = document.forms['editorForm'].elements[0].value;
@@ -232,23 +243,25 @@ function submitCode () {
 
 //Package the app into a zip file.
 function package() {
-    var zip = new JSZip();
-    zip.file("manifest.webapp", manifest);
-    zip.file("index.html", markup);
-    zip.file("style.css", style);
-    zip.file("script.js", script);
-    content = zip.generate();
-    location.href="data:application/zip;base64," + content;
+	var zip = new JSZip();
+	zip.file("manifest.webapp", manifest);
+	zip.file("index.html", markup);
+	zip.file("style.css", style);
+	zip.file("script.js", script);
+	content = zip.generate();
+	location.href="data:application/zip;base64," + content;
 }
 
+//Store the data within IndexedDB.
 function store () {
 
 	//IndexedDB Storage
-	console.log(db);
+	//console.log(db);
+    
 	//Initialize the Database first
-    //initializeDB();
+	//initializeDB();
 
-    console.log(db);
+	console.log(db);
 
 	// create the transaction with 1st parameter is the list of stores and the second specifies
 	// a flag for the readwrite option
@@ -301,6 +314,7 @@ function store () {
 	}
 }
 
+//Function to invoke for installing the app within the device. [Requires install() API customizations to allow installation from "file://" paths.]
 function install () {
 	var manifestUrl = "voila/app/manifest.webapp";
 	var request = window.navigator.mozApps.installPackage(manifestUrl);
@@ -315,6 +329,7 @@ function install () {
 	};
 }
 
+//Function to fetch data from SDCard storage.
 function fetch () {
 	var sdcard = navigator.getDeviceStorage('sdcard');
 
@@ -346,6 +361,7 @@ function fetch () {
 	}
 }
 
+//Function to delete files from the SDCard Storage.
 function remove () {
 	var sdcard = navigator.getDeviceStorage('sdcard');
 
@@ -360,6 +376,7 @@ function remove () {
 	}
 }
 
+//jQuery Function to be invoked during initialization to check for IndexedDB Support as well as retrieve or update existing IndexedDB stores.
 $(document).ready(function(){
 
 	if (window.indexedDB) {
